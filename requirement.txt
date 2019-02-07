@@ -1,0 +1,4 @@
+Django==1.9.13
+djangorestframework==3.6.1
+djutil==0.2
+psycopg2==2.7
