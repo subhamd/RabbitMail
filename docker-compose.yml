@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    container_name: 'postgres-server'
+    environment:
+      POSTGRES_USER: 'rabbitmail'
+      POSTGRES_DB: 'rabbitmail'
+      POSTGRES_PASSWORD: 'password'
+
+  web:
+    build: .
+    ports:
+      - '8000:8000'
+    container_name: 'rabbitmail-server'
+    volumes:
+      - .:/code
+    command: ["sh", "/code/scripts/init_script.sh"]
+    depends_on:
+      - db

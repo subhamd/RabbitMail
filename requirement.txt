@@ -2,3 +2,4 @@ Django==1.11.18
 djangorestframework==3.6.1
 djutil==0.2
 psycopg2==2.7
+gunicorn==19.9.0
