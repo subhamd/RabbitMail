@@ -6,7 +6,7 @@ from apps.rabbitmailserver.repositories.user_repo import UserRepository
 class UserService:
     user_repo = UserRepository()
 
-    def create_user(self, first_name, last_name, email_id):
+    def add_user(self, first_name, last_name, email_id):
         try:
             user = self.user_repo.get_user_by_email_id(email_id)
             if user:
@@ -19,5 +19,17 @@ class UserService:
         user.last_name = last_name if last_name else ''
         user.email_id = email_id
 
-        self.user_repo.save_user(user)
+        self.save_user(user)
         return user
+
+    def get_users_by_email_ids(self, email_ids):
+        return self.user_repo.get_users_by_email_ids(email_ids)
+
+    def get_user_by_id(self, user_id):
+        return self.user_repo.get_user_by_id(user_id)
+
+    def get_user_by_email_id(self, email_id):
+        return self.user_repo.get_user_by_email_id(email_id)
+
+    def save_user(self, user):
+        self.user_repo.save_user(user)

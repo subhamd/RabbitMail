@@ -17,6 +17,10 @@ class UserRepository:
         except User.DoesNotExist:
             raise UserNotFoundException("User with email_id: {0} doesn't exist".format(email_id))
 
+    def get_users_by_email_ids(self, email_ids):
+        users = User.objects.filter(email_id__in=email_ids)
+        return users
+
     def save_user(self, user):
         user.save()
 

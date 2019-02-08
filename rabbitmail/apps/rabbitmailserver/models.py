@@ -4,14 +4,14 @@ from djutil.models import TimeStampedModel
 
 class DefaultMailbox(models.Model):
     INBOX = 'INBOX'
-    SENT_ITEMS = 'SENT ITEMS'
     DRAFT = 'DRAFT'
+    SENT_ITEMS = 'SENT ITEMS'
     TRASH = 'TRASH'
 
     MAILBOX_NAME = (
         (INBOX, 'Inbox'),
-        (SENT_ITEMS, 'Sent Items'),
         (DRAFT, 'Draft'),
+        (SENT_ITEMS, 'Sent Items'),
         (TRASH, 'Trash')
     )
 

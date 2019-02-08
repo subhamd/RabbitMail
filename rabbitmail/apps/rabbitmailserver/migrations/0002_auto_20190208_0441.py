@@ -4,11 +4,18 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+from apps.rabbitmailserver.models import DefaultMailbox
+
 
 def initialize_database(apps, schema_editor):
-    DefaultMailbox = apps.get_model('rabbitmailserver', 'DefaultMailbox')
+    # DefaultMailbox = apps.get_model('rabbitmailserver', 'DefaultMailbox')
 
-    default_mailbox_names = ['INBOX', 'DRAFT', 'TRASH', 'SENT ITEMS']
+    default_mailbox_names = [
+        DefaultMailbox.INBOX,
+        DefaultMailbox.DRAFT,
+        DefaultMailbox.SENT_ITEMS,
+        DefaultMailbox.TRASH
+    ]
 
     for default_mailbox_name in default_mailbox_names:
         default_mailbox = DefaultMailbox()
@@ -19,7 +26,7 @@ def initialize_database(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rabbitmailserver', '0002_auto_20190208_0427'),
+        ('rabbitmailserver', '0001_initial'),
     ]
 
     operations = [

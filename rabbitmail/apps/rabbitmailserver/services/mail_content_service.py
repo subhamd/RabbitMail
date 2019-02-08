@@ -1,28 +1,25 @@
-from apps.rabbitmailserver.models import MailContent, User
+from apps.rabbitmailserver.models import MailContent
 from apps.rabbitmailserver.repositories.mail_content_repository import MailContentRepository
-from apps.rabbitmailserver.repositories.user_repo import UserRepository
 
 
 class MailContentService:
-    user_repo = UserRepository()
     mail_content_repo = MailContentRepository()
 
     def add_mail_content(self,
-                         sender_user_id,
+                         sender,
                          recipients=None,
                          subject=None,
                          body=None,
                          associated_mail_id=None):
         """
         add MailContent
-        :param sender_user_id: sender's user_id
+        :param apps.rabbitmailserver.models.User sender:
         :param recipients: recipients of mail
         :param subject: subject of mail
         :param body: body of mail
         :param associated_mail_id: associated MailContent's id
         :return:
         """
-        sender = self.user_repo.get_user_by_id(sender_user_id)
 
         mail_content = MailContent()
         mail_content.sender_email_id = sender.email_id
@@ -38,5 +35,12 @@ class MailContentService:
             associated_mail_content.id = associated_mail_id
             mail_content.associated_mail_content = associated_mail_content
 
+        self.save_mail_content(mail_content)
+        return mail_content
+
+    def save_mail_content(self, mail_content):
         self.mail_content_repo.save_mail_content(mail_content)
+
+    def get_mail_content_by_id(self, mail_content_id):
+        mail_content = self.mail_content_repo.get_mail_content_by_id(mail_content_id)
         return mail_content
