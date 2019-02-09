@@ -12,7 +12,7 @@ class APIResponse(object):
 
         return cls.__prep_error_response(error_code=e.error_code,
                                          message=e.message,
-                                         response_code=e.code,
+                                         response_code=e.status_code,
                                          developer_message=developer_message,
                                          error_type="logical_error")
 
