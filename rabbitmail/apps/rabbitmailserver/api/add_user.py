@@ -4,12 +4,15 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 
+from apps.rabbitmailserver.exceptions import RabbitMailException
 from apps.rabbitmailserver.exceptions.exception import MissingRequiredParameterInRequestException
 from apps.rabbitmailserver.services.user_service import UserService
+from apps.rabbitmailserver.utils.api_response import APIResponse
 
 
 class AddUser(APIView):
     user_service = UserService()
+    api_response = APIResponse()
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -30,6 +33,8 @@ class AddUser(APIView):
                 raise MissingRequiredParameterInRequestException('Parameter first_name and email_id is mandatory')
 
             user = self.user_service.add_user(first_name, last_name, email_id)
-            return JsonResponse({'user_id': user.id}, status=HTTP_200_OK)
+            return self.api_response.prep_success_response({'user_id': user.id})
+        except RabbitMailException as e:
+            return self.api_response.rabbitmail_exception_error_response(e)
         except Exception as e:
-            return JsonResponse({'error_message': str(e)}, status=HTTP_400_BAD_REQUEST)
+            return self.api_response.internal_error_response(str(e))

@@ -4,14 +4,17 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
 
+from apps.rabbitmailserver.exceptions import RabbitMailException
 from apps.rabbitmailserver.exceptions.exception import MissingRequiredParameterInRequestException
 from apps.rabbitmailserver.services.mail_content_service import MailContentService
 from apps.rabbitmailserver.services.user_mailbox_content_service import UserMailboxContentService
+from apps.rabbitmailserver.utils.api_response import APIResponse
 
 
 class ForwardEmail(APIView):
     mail_content_service = MailContentService()
     user_mailbox_content_service = UserMailboxContentService()
+    api_response = APIResponse()
 
     @method_decorator(csrf_exempt)
     def dispatch(self, *args, **kwargs):
@@ -70,7 +73,9 @@ class ForwardEmail(APIView):
                 })
             data['action_response'] = mail_forwarding_response
 
-            return JsonResponse({'data': data}, status=HTTP_200_OK)
+            return self.api_response.prep_success_response({'data': data})
+        except RabbitMailException as e:
+            return self.api_response.rabbitmail_exception_error_response(e)
         except Exception as e:
-            return JsonResponse({'error_message': str(e)}, status=HTTP_400_BAD_REQUEST)
+            return self.api_response.internal_error_response(str(e))
 
